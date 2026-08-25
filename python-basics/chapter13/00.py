@@ -1,0 +1,3 @@
+profile = {}
+
+print(type(profile))
