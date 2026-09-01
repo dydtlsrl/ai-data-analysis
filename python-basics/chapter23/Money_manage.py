@@ -6,13 +6,25 @@
 #  }
 
 import csv #표 형태의 데이터를 파일로 저장하는 간단한 형식
-
-
-
+from pathlib import Path
+import pandas as pd
+from datetime import datetime
 
 def add_expense(expenses):
     #정의한 함수(함수가 전달받을 매수변수)
-    date = input("날짜(YYYY-MM-DD): ").strip()
+    while True:
+        date = input("날짜(YYYY-MM-DD), 취소: 0: ").strip()
+        
+        if date == "0":
+            print("지출 추가를 취소했습니다.")
+            return
+            
+        try:
+            datetime.strptime(date, "%Y-%m-%d")
+            break
+
+        except ValueError:
+            print("날짜는 YYYY-MM-DD 형식으로 입력해 주세요.")
     category = input("카테고리: ").strip()
     description = input("내용: ").strip()
     if not date or not category or not description:
@@ -105,6 +117,12 @@ def load_expenses(file_path):
         with open(file_path, "r", encoding="utf-8-sig", newline="") as file:
             reader =csv.DictReader(file)
             for row in reader:
+
+                try:
+                    datetime.strptime(row["date"], "%Y-%m-%d")
+                except ValueError:
+                    print("잘 못 처리된 날짜입니다.", row)
+                    continue
                 # print("읽은 행:", row)
 
                 try:
@@ -113,7 +131,6 @@ def load_expenses(file_path):
                     print("잘 못 처리된 금액입니다.", row )
                     continue
 
-                
                 expenses.append(row)
     except FileNotFoundError :
         print("출력 가능한 데이터가 없습니다.")
@@ -160,3 +177,15 @@ while True:
 # print("카테고리별 지출:", calculate_by_category(expenses))
 # show_expenses(expenses)
 # print(expenses)
+
+
+
+
+# 판다스 교차 검증 코드
+# BASE_DIR = Path(__file__).resolve().parents[2]
+# file_path = BASE_DIR / "python-basics" / "chapter23" / "expenses.csv"
+
+# df = pd.read_csv(file_path)
+
+# print("전체 지출:", df["amount"].sum())
+# print(df.groupby("category")["amount"].sum())
