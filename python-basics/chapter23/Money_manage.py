@@ -13,15 +13,15 @@ from expense_common import create_expense #공통함수를 분리해서 가져�
 
 
 # 임시 테스트
-expense, error = create_expense(
-    "2026-09-01",
-    "식비",
-    "점심",
-    "12000"
-)
+# expense, error = create_expense(
+#     "2026-09-01",
+#     "식비",
+#     "점심",
+#     "12000"
+# )
 
-print(expense)
-print(error)
+# print(expense)
+# print(error)
 
 
 def add_expense(expenses):

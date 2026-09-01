@@ -44,12 +44,12 @@ def create_expense(date, category, description, amount):
 # print(error)
 
 # Error 테스트
-expense, error = create_expense(
-    "2026-99-01",
-    "식비",
-    "점심",
-    "12000"
-)
+# expense, error = create_expense(
+#     "2026-99-01",
+#     "식비",
+#     "점심",
+#     "12000"
+# )
 
-print(expense)
-print(error)
+# print(expense)
+# print(error)
