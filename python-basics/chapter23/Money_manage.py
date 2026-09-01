@@ -9,6 +9,20 @@ import csv #표 형태의 데이터를 파일로 저장하는 간단한 형식
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
+from expense_common import create_expense #공통함수를 분리해서 가져오기 위한 것.
+
+
+# 임시 테스트
+expense, error = create_expense(
+    "2026-09-01",
+    "식비",
+    "점심",
+    "12000"
+)
+
+print(expense)
+print(error)
+
 
 def add_expense(expenses):
     #정의한 함수(함수가 전달받을 매수변수)
