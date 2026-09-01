@@ -126,11 +126,37 @@ def load_expenses(file_path):
 
 file_path = "python-basics/chapter23/expenses.csv"
 expenses = load_expenses(file_path)
-add_expense(expenses)
-save_expenses(file_path, expenses)
 
 
-print("총지출 금액:",calculate_total(expenses))
-print("카테고리별 지출:", calculate_by_category(expenses))
-show_expenses(expenses)
-print(expenses)
+while True:
+    print("\n=== 지출 관리 프로그램 ===")
+    print("1. 지출 추가")
+    print("2. 지출 목록")
+    print("3. 목록 합계")
+    print("4. 전체 합계")
+    print("5. 저장")
+    print("0. 종료")
+
+    choice = input("선택: ").strip()
+    if choice =="1":
+        add_expense(expenses)
+    elif choice =="2":
+        show_expenses(expenses)
+    elif choice =="3":
+        print(calculate_by_category(expenses))
+    elif choice =="4":
+        print("총지출 금액:",calculate_total(expenses))
+    elif choice =="5":
+        save_expenses(file_path, expenses)
+        print("저장했습니다.")
+    elif choice == "0":
+        break
+    else:
+        print("메뉴 번호를 다시 선택해주세요.")
+
+# add_expense(expenses)
+# save_expenses(file_path, expenses)
+# print("총지출 금액:",calculate_total(expenses))
+# print("카테고리별 지출:", calculate_by_category(expenses))
+# show_expenses(expenses)
+# print(expenses)
