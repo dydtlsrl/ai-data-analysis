@@ -9,45 +9,43 @@ import csv #표 형태의 데이터를 파일로 저장하는 간단한 형식
 from pathlib import Path
 import pandas as pd
 from datetime import datetime
+from expense_common import create_expense #공통함수를 분리해서 가져오기 위한 것.
+
+
+# 임시 테스트
+# expense, error = create_expense(
+#     "2026-09-01",
+#     "식비",
+#     "점심",
+#     "12000"
+# )
+
+# print(expense)
+# print(error)
+
 
 def add_expense(expenses):
     #정의한 함수(함수가 전달받을 매수변수)
-    while True:
-        date = input("날짜(YYYY-MM-DD), 취소: 0: ").strip()
+    date = input("날짜(YYYY-MM-DD), 취소: 0: ").strip()
         
-        if date == "0":
-            print("지출 추가를 취소했습니다.")
-            return
-            
-        try:
-            datetime.strptime(date, "%Y-%m-%d")
-            break
-
-        except ValueError:
-            print("날짜는 YYYY-MM-DD 형식으로 입력해 주세요.")
+    if date == "0":
+        print("지출 추가를 취소했습니다.")
+        return
     category = input("카테고리: ").strip()
     description = input("내용: ").strip()
-    if not date or not category or not description:
-        print("날짜, 카테고리, 내용은 비워 둘 수 없습니다.")
-        return
-    try:
-        amount = int(input("금액: "))
-    except ValueError:
-        print("금액은 정수로 입력해 주세요.")
-        return
-    if amount <= 0:
-        print("금액은 0보다 큰 값으로 입력해 주세요.")
+    amount = input("금액: ").strip()
+
+    expense, error = create_expense(
+    date,
+    category,
+    description,
+    amount
+    )
+    if error:
+        print(error)
         return
 
-    expense = {
-        "date": date,
-        "category": category,
-        "description": description,
-        "amount": amount,
-    }
     expenses.append(expense)
-
-
 
 def show_expenses(expenses):
     if not expenses:
