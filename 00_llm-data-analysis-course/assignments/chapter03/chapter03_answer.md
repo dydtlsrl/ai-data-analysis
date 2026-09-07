@@ -77,9 +77,8 @@ DBeaver는 그 PostgreSQL에 접속해서 사람이 보기 쉽게 작업할 수 
 
 권장 이미지 경로:
 
-```md
-![DBeaver PostgreSQL 연결 성공 화면](./images/step02_connection.pngimages/step02_connection.png)
-```
+![DBeaver PostgreSQL 연결 성공 화면](./images/step02_connection.png)
+
 
 `여기에 연결 성공 화면을 삽입하세요.`
 
@@ -170,9 +169,8 @@ transaction_read_only = off는 현재 트랜잭션이 읽기 전용 모드가 �
 
 권장 경로:
 
-```md
-![현재 DB 사용자 스키마 확인 결과](./images/step03_location_check.pngimages/images/step03_location_check.png)
-```
+![현재 DB 사용자 스키마 확인 결과](./images/step03_location_check.png)
+
 
 `여기에 현재 DB/사용자/스키마/search_path 결과 화면을 삽입하세요.`
 
@@ -266,9 +264,8 @@ SELECT 'C' AS step;
 
 권장 경로:
 
-```md
 ![SQL 실행 범위 비교 화면](./images/step05_execution_scope.png)
-```
+
 
 `여기에 실행 범위 비교 화면을 삽입하세요.`
 
@@ -644,7 +641,7 @@ https://github.com/<본인-GitHub-ID>/<본인-저장소>/blob/main/assignments/c
 내 제출 URL:
 
 ```text
-
+https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/assignments/chapter03/chapter03_answer.md
 ```
 
 > 저장소 메인 URL, 교수자 템플릿 URL, Raw URL이 아니라 **작성 완료된 본인 `chapter03_answer.md` 파일 화면 URL**을 제출합니다.
