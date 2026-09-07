@@ -330,7 +330,7 @@ AI가 `ORD-002` 두 행이 실제 두 주문인지 중복 입력인지 스스로
 내가 최종적으로 내린 판단:
 
 ```text
-
+사용자의 
 ```
 
 ## 4-6. 증거 화면
@@ -695,12 +695,10 @@ https://github.com/<본인-GitHub-ID>/<본인-저장소>/blob/main/assignments/c
 내 실제 제출 URL:
 
 ```text
-
+https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/assignments/chapter01/chapter01_answer.md
 ```
 
 > LMS에는 위 **본인 저장소의 `chapter01_answer.md` 파일 URL 하나**를 제출합니다.
-
-https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/assignments/chapter01/chapter01_answer.md
 ---
 
 ## 권장 학생 저장소 구조
