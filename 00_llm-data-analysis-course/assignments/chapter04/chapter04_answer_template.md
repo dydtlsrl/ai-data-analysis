@@ -399,9 +399,9 @@ DELETE가 성공했다고 메시지가 나오더라도, 내가 의도한 데이�
 `04_update_delete_students.sql`을 본문 시작 상태에서 실행했다면 다음을 확인합니다.
 
 ```text
-최종 학생 수:
-이준호 grade:
-박서연 존재 여부:
+최종 학생 수: 7
+이준호 grade: 4
+박서연 존재 여부: 0행
 ```
 
 본문 기준 기대 상태와 비교합니다.
@@ -415,7 +415,15 @@ DELETE가 성공했다고 메시지가 나오더라도, 내가 의도한 데이�
 ### 내 실제 결과가 기준과 다르다면 원인
 
 ```text
+본문 기준 기대 상태와 실제 결과가 다른 이유는,
+중간 실습 과정에서 내가 직접 작성한 INSERT SQL로 강백호 데이터를 추가했기 때문이다.
 
+본문 기준은 처음 입력된 students 데이터에서 UPDATE와 DELETE만 실행한 상태를 기준으로 한다.
+하지만 나는 추가 실습에서 강백호와 서태웅 데이터를 입력했고,
+서태웅은 삭제했지만 강백호 데이터는 남아 있다.
+
+그래서 이준호 grade 변경과 박서연 삭제 여부는 기준과 일치하지만,
+최종 학생 수는 본문 기준보다 2명 많은 7명으로 확인되었다.
 ```
 
 ---
@@ -429,14 +437,15 @@ DELETE가 성공했다고 메시지가 나오더라도, 내가 의도한 데이�
 내가 사용한 SQL:
 
 ```sql
-
+INSERT INTO public.students (name, email, major, grade)
+VALUES ('강백호주니어', '100ho@example.com', '휴학중', 1);
 ```
 
 ```text
-오류 메시지 핵심 단서:
-왜 실패해야 맞는가:
-어떤 규칙이 작동했는가:
-실패 후 기존 데이터가 어떻게 유지되었는가:
+오류 메시지 핵심 단서: "students_email_key" 고유 제약 조건을 위반함
+왜 실패해야 맞는가: 중복 되는 이메일주소가 입력됌.
+어떤 규칙이 작동했는가: email 열에 설정된 UNIQUE 제약 조건
+실패 후 기존 데이터가 어떻게 유지되었는가: 기존 강백호 데이터는 그대로 유지
 ```
 
 ## 9-2. 이름 `NULL` 입력 `NOT NULL` 오류
@@ -444,19 +453,26 @@ DELETE가 성공했다고 메시지가 나오더라도, 내가 의도한 데이�
 내가 사용한 SQL:
 
 ```sql
-
+INSERT INTO public.students (name, email, major, grade)
+VALUES (NULL, 'null_name_test@example.com', '테스트전공', 1);
 ```
 
 ```text
-오류 메시지 핵심 단서:
-왜 실패해야 맞는가:
-어떤 규칙이 작동했는가:
+오류 메시지 핵심 단서: "name" 칼럼(해당 릴레이션 "students")의 null 값이 not null 제약조건을 위반
+왜 실패해야 맞는가: name 열은 학생 이름을 저장하는 필수 열이고, 테이블 생성 시 NOT NULL로 설정했기 때문이다.
+따라서 name에는 NULL 값을 입력할 수 없다.
+어떤 규칙이 작동했는가: null 값이 not null 제약조건
 ```
 
 ### 실패한 INSERT 뒤 자동 생성 `id` 번호에 빈 구간이 생길 수 있어도 문제라고 단정할 수 없는 이유
 
 ```text
+자동 생성 id는 행을 구분하기 위한 내부 식별자이다.
+INSERT가 실패하더라도 데이터베이스가 id 값을 미리 사용하려고 시도한 뒤 실패할 수 있기 때문에,
+중간 번호가 비어 보일 수 있다.
 
+하지만 id의 목적은 연속된 번호를 만드는 것이 아니라 각 행을 고유하게 구분하는 것이다.
+따라서 id 번호에 빈 구간이 생겼다고 해서 데이터 오류라고 단정할 수는 없다.
 ```
 
 ### 증거 화면
@@ -468,7 +484,8 @@ assignments/chapter04/images/step09_constraint_error.png
 ```
 
 `여기에 제약조건 오류 화면을 삽입하세요.`
-
+![UNIQUE 제약 조건 오류 확인](./images/step09_unique_error.png)
+![NOT NULL 제약 조건 오류 확인](./images/step09_not_null_error.png)
 ---
 
 # 10. `verify_students.sql`로 최종 상태 확인
@@ -480,17 +497,32 @@ code/chapter04/verify_students.sql
 ```
 
 ```text
-현재 전체 학생 수:
-NULL 개수:
-이준호 grade:
-박서연 존재 여부:
+현재 전체 학생 수:  7
+NULL 개수: 1
+이준호 grade: 4
+박서연 존재 여부: 0
 현재 데이터 상태에서 예상과 다른 부분:
+본문 기준 기대 학생 수는 5명이지만, 실제 학생 수는 7명이다.
+
+본문 기준 기대 상태와 실제 결과가 다른 이유는,
+중간 실습 과정에서 내가 직접 작성한 INSERT SQL을 추가로 실행했기 때문이다.
+
+본문 기준은 처음 입력된 students 데이터에서 UPDATE와 DELETE만 실행한 상태를 기준으로 한다.
+하지만 나는 실습 중에 강백호 데이터를 추가했고,
+또한 null_name_test@example.com 테스트 데이터도 추가된 상태이다.
+
+그래서 이준호 grade가 4로 변경된 것과 박서연이 삭제된 것은 기준과 일치하지만,
+추가로 입력한 데이터가 남아 있어 전체 학생 수는 본문 기준보다 많게 나왔다.
 ```
 
 ### 검증 SQL을 따로 두면 좋은 이유
 
 ```text
+검증 SQL을 따로 두면 INSERT, UPDATE, DELETE를 실행한 뒤
+현재 데이터가 의도한 상태인지 한 번에 확인할 수 있다.
 
+특히 행 수, 특정 학생의 값, 삭제 여부 등을 다시 확인할 수 있으므로
+실습 결과가 예상과 일치하는지 검증하기 좋다.
 ```
 
 ---
@@ -502,33 +534,54 @@ NULL 개수:
 ## 11-1. 내가 작성한 SQL
 
 ```sql
-
+SELECT name, email, major, grade
+FROM public.students
+WHERE grade >= 2
+ORDER BY grade DESC;
 ```
 
 ## 11-2. AI에게 전달한 핵심 요청
 
 ```text
+나는 PostgreSQL 초보자입니다.
+아래 SQL을 바로 다시 작성하지 말고 먼저 안전성을 검토해 주세요.
+다음 순서로 답해 주세요.
+1. 이 SQL이 영향을 줄 것으로 예상되는 행
+2. WHERE 조건이 너무 넓거나 모호하지 않은지
+3. NULL 처리에서 주의할 점
+4. 실행 전에 같은 조건으로 확인할 SELECT
+5. 실행 후 결과를 확인할 SELECT
+6. 내가 놓친 위험이 있다면 질문 형태로 제시
 
+SELECT name, email, major, grade
+FROM public.students
+WHERE grade >= 2
+ORDER BY grade DESC;
 ```
 
 ## 11-3. AI 검토 결과
 
+### 11-3. AI 검토 결과
+
 | AI 제안 | 수용 / 수정 / 거절 | 실제 검증 결과 | 나의 이유 |
 | --- | --- | --- | --- |
-|  |  |  |  |
-|  |  |  |  |
-|  |  |  |  |
-
+| `WHERE grade >= 2` 조건은 2학년 이상 학생을 조회하는 조건이다. | 수용 | 5행 조회됨 | 내가 조회하려는 대상이 2학년 이상 학생이므로 조건이 적절하다고 판단했다. |
+| `grade`가 `NULL`인 학생은 결과에서 제외된다. | 수용 | 윤서진은 조회되지 않음 | `NULL`은 비교할 수 없는 값이므로 `grade >= 2` 조건에 포함되지 않는 것이 맞다. |
+| 같은 grade 값의 학생 순서를 명확히 하려면 `ORDER BY grade DESC, id ASC`를 사용하는 것이 좋다. | 수정 | 정렬 결과가 더 명확해짐 | 기존 SQL도 실행은 가능하지만, 같은 학년 학생의 순서까지 정하기 위해 `id ASC`를 추가했다. |
 ### AI가 예상한 영향 행 수와 실제 결과가 같았나요?
 
 ```text
-
+AI는 `grade`가 2 이상인 학생이 5행 조회될 것으로 예상했고
+결과도 일치했다.  
 ```
 
 ### AI 답변을 실행 전에 검토해야 하는 이유
 
 ```text
+답변이 맞아 보이더라도 현재 내 데이터 상태와 다를 수 있기 때문이다.
 
+특히 UPDATE나 DELETE처럼 데이터를 변경하는 SQL은 WHERE 조건이 잘못되면 원하지 않는 데이터까지 수정되거나 삭제될 수 있다.  
+그래서 실행 전에 예상 행 수, WHERE 조건, NULL 처리, 확인용 SELECT를 먼저 검토해야 한다.
 ```
 
 ---
@@ -538,23 +591,33 @@ NULL 개수:
 Chapter 01~03에서 정한 개인 서비스에서 **테이블 하나**를 선택합니다.
 
 ```text
-서비스 이름:
-테이블 이름:
-한 행의 의미:
+서비스 이름: EgoQuest
+테이블 이름: quest_completion_records
+한 행의 의미: 사용자가 하나의 퀘스트를 완료하거나 시도한 기록 1건
 ```
 
 | 열 이름 | 저장할 값 | 타입 후보 | NULL 가능? | UNIQUE 후보? | 이유 |
 | --- | --- | --- | --- | --- | --- |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
+| id | 퀘스트 완료 기록 ID | INTEGER | NO | YES | 각 완료 기록을 구분하기 위한 기본키 |
+| user_id | 사용자 ID | INTEGER | NO | NO | 어떤 사용자의 기록인지 연결하기 위해 필요 |
+| quest_id | 퀘스트 ID | INTEGER | NO | NO | 어떤 퀘스트를 수행했는지 연결하기 위해 필요 |
+| status | 퀘스트 상태 | VARCHAR(20) | NO | NO | 완료, 진행 중, 실패 같은 상태를 저장 |
+| reward_point | 획득 포인트 | INTEGER | NO | NO | 퀘스트 완료 보상 점수를 저장 |
+| completed_at | 완료 시각 | TIMESTAMPTZ | YES | NO | 아직 완료되지 않은 경우 NULL일 수 있음 |
+| created_at | 기록 생성 시각 | TIMESTAMPTZ | NO | NO | 기록이 생성된 시각을 저장 |
 
 ```text
 PK 후보:
+id
+
 업무 식별자 후보:
+user_id + quest_id + created_at
+
 아직 미확정인 규칙:
+한 사용자가 같은 퀘스트를 여러 번 수행할 수 있게 할지 아직 정하지 않았다.
+반복 수행을 허용하면 같은 user_id와 quest_id 조합이 여러 번 저장될 수 있다.
+반대로 한 퀘스트를 한 번만 수행하게 한다면 user_id와 quest_id 조합에 UNIQUE 제약을 둘 수 있다.
+이게 Chapter 01에서 정한 EgoQuest 서비스와 가장 잘 이어진다.
 ```
 
 ## 선택: CREATE TABLE 초안
@@ -562,13 +625,24 @@ PK 후보:
 > 아직 확정되지 않은 업무 규칙은 억지로 제약조건으로 만들지 않습니다.
 
 ```sql
-
+CREATE TABLE public.quest_records (
+    id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    user_name VARCHAR(50) NOT NULL,
+    quest_title VARCHAR(100) NOT NULL,
+    quest_type VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    reward_point INTEGER NOT NULL DEFAULT 0,
+    completed_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ### AI에게 검토받은 뒤 수정한 부분
 
 ```text
-
+반복 수행 가능 여부가 아직 확정되지 않았기 때문에 user_name과 quest_title에는 UNIQUE 제약을 넣지 않았다.
+completed_at은 완료 전에는 값이 없을 수 있어 NULL을 허용했고,
+created_at은 기록 생성 시각이 항상 필요하므로 NOT NULL DEFAULT CURRENT_TIMESTAMP로 설정했다.
 ```
 
 ---
@@ -579,42 +653,42 @@ PK 후보:
 
 ```text
 1. SQL 실행 성공과 올바른 대상 선택이 다른 이유는
-   ____________________________________________________________ 이다.
+   _SQL이 실행됐다고 해서 내가 의도한 행에 정확히 적용됐다는 뜻은 아니기 때문이_ 이다.
 
 2. UPDATE와 DELETE 전에 SELECT를 먼저 해야 하는 이유는
-   ____________________________________________________________ 이다.
+   _수정하거나 삭제할 대상이 맞는지 먼저 확인하기 위해서_ 이다.
 
 3. 영향받은 행 수를 확인해야 하는 이유는
-   ____________________________________________________________ 이다.
+   _내가 예상한 개수만큼만 변경됐는지 확인해야 하기 때문_ 이다.
 
 4. UNIQUE 또는 NOT NULL 오류를 '보호 장치가 정상 동작한 결과'라고 볼 수 있는 이유는
-   ____________________________________________________________ 이다.
+   _잘못된 데이터가 들어가는 것을 DB가 막아준 것이기 때문_ 이다.
 
 5. AI가 SQL을 만들어 주더라도 내가 반드시 확인해야 하는 것은
-   ____________________________________________________________ 이다.
+   _현재 DB, 실행 대상, WHERE 조건, 영향 행 수가 내 의도와 맞는지_ 이다.
 ```
 
 ---
 
 # 14. 제출 체크리스트
 
-- [ ] `chapter04_answer.md`를 본인 저장소에 만들었다.
-- [ ] 현재 DB와 실행 환경을 확인했다.
-- [ ] `public.students`를 생성했다.
-- [ ] 샘플 6명 입력 결과를 검증했다.
-- [ ] SELECT 문제에서 실행 전 예상 행 수를 작성했다.
-- [ ] 가상 학생 2명을 추가했다.
-- [ ] UPDATE 전후를 SELECT로 확인했다.
-- [ ] DELETE 전후를 SELECT로 확인했다.
-- [ ] UNIQUE 오류를 관찰했다.
-- [ ] NOT NULL 오류를 관찰했다.
-- [ ] `verify_students.sql`로 상태를 확인했다.
-- [ ] AI 제안을 실제 SQL 결과와 비교했다.
-- [ ] 개인 서비스 테이블 하나를 확장 설계했다.
-- [ ] 핵심 캡처는 3~4장 정도로 제한했다.
-- [ ] 비밀번호·개인정보가 캡처에 없다.
-- [ ] Markdown 이미지가 GitHub 웹 화면에서 정상 표시된다.
-- [ ] commit/push를 완료했다.
+- [x] `chapter04_answer.md`를 본인 저장소에 만들었다.
+- [x] 현재 DB와 실행 환경을 확인했다.
+- [x] `public.students`를 생성했다.
+- [x] 샘플 6명 입력 결과를 검증했다.
+- [x] SELECT 문제에서 실행 전 예상 행 수를 작성했다.
+- [x] 가상 학생 2명을 추가했다.
+- [x] UPDATE 전후를 SELECT로 확인했다.
+- [x] DELETE 전후를 SELECT로 확인했다.
+- [x] UNIQUE 오류를 관찰했다.
+- [x] NOT NULL 오류를 관찰했다.
+- [x] `verify_students.sql`로 상태를 확인했다.
+- [x] AI 제안을 실제 SQL 결과와 비교했다.
+- [x] 개인 서비스 테이블 하나를 확장 설계했다.
+- [x] 핵심 캡처는 3~4장 정도로 제한했다.
+- [x] 비밀번호·개인정보가 캡처에 없다.
+- [x] Markdown 이미지가 GitHub 웹 화면에서 정상 표시된다.
+- [x] commit/push를 완료했다.
 
 ---
 
