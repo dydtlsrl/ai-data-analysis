@@ -887,9 +887,11 @@ AI와 검토하면서 할 일은 개인 작업,
 https://github.com/<본인-GitHub-ID>/<본인-저장소>/blob/main/assignments/chapter07/chapter07_answer.md
 ```
 
-내 제출 URL:
+내 제출 URL: 
 
 ```text
+
+https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/assignments/chapter07/chapter07_answer.md
 
 ```
 
