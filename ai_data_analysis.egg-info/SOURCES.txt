@@ -1,6 +1,0 @@
-README.md
-pyproject.toml
-ai_data_analysis.egg-info/PKG-INFO
-ai_data_analysis.egg-info/SOURCES.txt
-ai_data_analysis.egg-info/dependency_links.txt
-ai_data_analysis.egg-info/top_level.txt
