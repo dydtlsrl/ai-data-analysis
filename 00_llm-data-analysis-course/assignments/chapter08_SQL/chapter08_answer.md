@@ -663,6 +663,10 @@ assignments/chapter08/images/step09_over_aggregation.png
 
 `여기에 잘못된 합계와 올바른 합계를 비교한 화면을 삽입하세요.`
 
+![잘못된 합계](images/step09_over_aggregation.png)
+
+![올바른 합계](images/step09_over_aggregation02.png)
+
 ---
 
 # 10. 상세 결과 ↔ 집계 결과 교차 검산
@@ -930,25 +934,25 @@ COUNT나 SUM이 과대 집계될 수 있으므로,
 
 # 15. 제출 체크리스트
 
-- [ ] `chapter08_answer.md`를 본인 저장소에 만들었다.
-- [ ] `00_check_course_project.sql`이 통과했다.
-- [ ] 업무 질문마다 결과 한 행을 먼저 정의했다.
-- [ ] INNER JOIN과 다중 JOIN을 실행했다.
-- [ ] LEFT JOIN에서 0건 부모를 확인했다.
-- [ ] `COUNT(*)`와 `COUNT(child.id)` 차이를 설명했다.
-- [ ] ON과 WHERE 조건 위치 차이를 직접 비교했다.
-- [ ] `LEFT JOIN ... IS NULL`과 `NOT EXISTS`를 비교했다.
-- [ ] 전체/활성/취소 제외 기준값을 직접 검산했다.
-- [ ] `GROUP BY`, `HAVING`을 사용했다.
-- [ ] 과대 집계 오류와 수정 결과를 비교했다.
-- [ ] 상세 결과와 집계 결과를 교차 검산했다.
-- [ ] `03_join_aggregation_validation.sql`이 통과했다.
-- [ ] 개인 프로젝트 업무 질문 3개를 작성했다.
-- [ ] AI SQL을 실행 성공 여부가 아니라 의미와 검산 결과로 평가했다.
-- [ ] 핵심 캡처는 3~4장 정도만 사용했다.
-- [ ] 비밀번호·개인정보·비밀정보가 없다.
-- [ ] GitHub 웹에서 Markdown과 이미지가 정상적으로 보인다.
-- [ ] 최종 답안을 commit/push했다.
+- [x] `chapter08_answer.md`를 본인 저장소에 만들었다.
+- [x] `00_check_course_project.sql`이 통과했다.
+- [x] 업무 질문마다 결과 한 행을 먼저 정의했다.
+- [x] INNER JOIN과 다중 JOIN을 실행했다.
+- [x] LEFT JOIN에서 0건 부모를 확인했다.
+- [x] `COUNT(*)`와 `COUNT(child.id)` 차이를 설명했다.
+- [x] ON과 WHERE 조건 위치 차이를 직접 비교했다.
+- [x] `LEFT JOIN ... IS NULL`과 `NOT EXISTS`를 비교했다.
+- [x] 전체/활성/취소 제외 기준값을 직접 검산했다.
+- [x] `GROUP BY`, `HAVING`을 사용했다.
+- [x] 과대 집계 오류와 수정 결과를 비교했다.
+- [x] 상세 결과와 집계 결과를 교차 검산했다.
+- [x] `03_join_aggregation_validation.sql`이 통과했다.
+- [x] 개인 프로젝트 업무 질문 3개를 작성했다.
+- [x] AI SQL을 실행 성공 여부가 아니라 의미와 검산 결과로 평가했다.
+- [x] 핵심 캡처는 3~4장 정도만 사용했다.
+- [x] 비밀번호·개인정보·비밀정보가 없다.
+- [x] GitHub 웹에서 Markdown과 이미지가 정상적으로 보인다.
+- [x] 최종 답안을 commit/push했다.
 
 ---
 
@@ -963,7 +967,7 @@ https://github.com/<본인-GitHub-ID>/<본인-저장소>/blob/main/assignments/c
 내 제출 URL:
 
 ```text
-
+https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/assignments/chapter08_SQL/chapter08_answer.md
 ```
 
 > 저장소 메인 URL, 교수자 템플릿 URL, Raw URL이 아니라 **작성 완료된 본인 `chapter08_answer.md` 파일 화면 URL**을 제출합니다.
