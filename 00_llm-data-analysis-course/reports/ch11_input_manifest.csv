@@ -1,0 +1,5 @@
+﻿filename,rows,columns,sha256,source_type,status
+customers_clean.csv,150,6,a442884f1e145b3d7f22be821d2fda6e364a4a99d74ba0f13b877b75e6e90bf1,processed,PASS
+products_clean.csv,100,4,788c2fe37a335511a157419baf3014a77670df5641be94121c62db6938e01cf0,processed,PASS
+orders_clean.csv,300,7,be02dd5ba10a691d2c0349a5c715f223a493dadc4642ae2cb79e10d3160c4f6b,processed,PASS
+order_items_clean.csv,764,6,fe6b08e1f786fd5935007322a81043b1099505924e0683cce27962148a360c03,processed,PASS

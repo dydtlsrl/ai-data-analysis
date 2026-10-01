@@ -1,0 +1,12 @@
+﻿step,check,status,evidence
+회귀 코드 검토,예측 시점과 입력 가용성,PASS,예측 시점 / 가용성
+회귀 코드 검토,타깃 재료·사후정보·식별자 누수 제외,PASS,line_total / quantity / unit_price / 누수
+회귀 코드 검토,시간 순서 분할,PASS,날짜 순서 / 동일 날짜
+회귀 코드 검토,Train 내부 모델 선택과 Baseline,PASS,TimeSeriesSplit / Dummy
+회귀 코드 검토,고정된 최종 평가,PASS,선택 모델을 고정 / final test / 다시 선택하지
+분류 코드 검토,타깃 범위,PASS,completed=0 / cancelled=1 / refunded
+분류 코드 검토,Feature Contract와 누수 제외,PASS,예측 시점 / 금지 입력 / order_status
+분류 코드 검토,병합 검증,PASS,validate/indicator / 미매칭
+분류 코드 검토,학습·검증·테스트 및 Baseline,PASS,train/validation/test / DummyClassifier
+분류 코드 검토,Validation에서 모델·임계값 선택,PASS,threshold는 validation / test는 final
+분류 코드 검토,FP/FN과 운영 한계,PASS,FP/FN / out-of-time

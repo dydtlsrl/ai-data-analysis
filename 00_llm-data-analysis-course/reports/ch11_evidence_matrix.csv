@@ -1,0 +1,8 @@
+﻿claim,evidence,status,observed_result
+필요한 컬럼 존재,usecols 지정 CSV 읽기,PASS,읽기 성공
+병합 키 검증,키 결측·고유성 및 many_to_one,PASS,앞 셀의 키 검증 통과
+주문 병합 행 수,len(joined) == len(items),PASS,764 → 764
+상품 병합 행 수,len(sales) == len(completed),PASS,474 → 474
+미매칭 없음,left merge의 indicator,PASS,주문·상품 미매칭 0건
+금액 합계 일치,집계 전후 금액의 np.isclose,PASS,"전체=148,990,000, 카테고리 합=148,990,000"
+비중 합계 100%,비중 합계의 np.isclose,PASS,100.000000%
