@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><title>07_concurrency</title><style>body{margin:20px;background:#fff;color:#152238}h1{font:20px sans-serif}p{font:13px sans-serif}pre{font:12px/1.4 Consolas,"Malgun Gothic",monospace;white-space:pre-wrap}</style><h1>07_concurrency</h1><p>실제 PostgreSQL psql 출력 로그 표시 화면 · 2026-10-01 · DBeaver 캡처 아님</p><pre>Session A (separate connection)
+BEGIN
+ course_id 
+-----------
+       303
+(1 row)
+LOCK_HELD
+ pg_sleep 
+----------
+(1 row)
+ROLLBACK
+Session B (separate connection)
+ transaction_isolation 
+-----------------------
+ read committed
+(1 row)
+BEGIN
+SET
+ course_id | remaining_seats 
+-----------+-----------------
+       303 |               1
+(1 row)
+ROLLBACK
+Session B elapsed: 3.008 seconds
+lock_timeout: not triggered</pre>

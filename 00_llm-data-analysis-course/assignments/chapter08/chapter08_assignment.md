@@ -5,6 +5,7 @@
 ## 제출 정보
 - 이름: 양성용
 - GitHub ID: dydtlsrl
+- 이메일: dydtlsrl@gmail.com
 - 작성일: 2026.09.17
 - 최종 Notebook URL: https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/assignments/chapter08/chapter08.ipynb
 

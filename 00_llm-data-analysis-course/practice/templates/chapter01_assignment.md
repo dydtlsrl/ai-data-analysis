@@ -7,8 +7,9 @@
 
 ## 0. 제출 정보
 
-- 이름:
-- GitHub ID:
+- 이름: 양성용
+- GitHub ID: dydtlsrl
+- 이메일: dydtlsrl@gmail.com
 - 개인 저장소명: `llm-data-analysis-study`
 - 작성일:
 - 사용한 LLM:

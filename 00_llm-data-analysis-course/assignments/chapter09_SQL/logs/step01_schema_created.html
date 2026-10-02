@@ -1,0 +1,39 @@
+<!doctype html><meta charset="utf-8"><title>step01_schema_created</title><style>body{margin:20px;background:#fff;color:#152238}h1{font:20px sans-serif}p{font:13px sans-serif}pre{font:12px/1.4 Consolas,"Malgun Gothic",monospace;white-space:pre-wrap}</style><h1>step01_schema_created</h1><p>실제 PostgreSQL psql 출력 로그 표시 화면 · 2026-10-01 · DBeaver 캡처 아님</p><pre>PostgreSQL psql actual execution log (2026-10-01)
+Not a DBeaver screenshot; full original: logs/01_06_main.txt
+01_transaction_lab_schema.sql
+(1 row)
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+ current_user 
+--------------
+ postgres
+(1 row)
+ current_schema 
+----------------
+ public
+(1 row)
+   search_path   
+-----------------
+ &quot;$user&quot;, public
+(1 row)
+BEGIN
+DO
+psql:01_transaction_lab_schema.sql:110: 알림:  Chapter 09 prerequisite check passed
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+DO
+psql:01_transaction_lab_schema.sql:183: 알림:  Chapter 09 transaction_lab schema created
+COMMIT
+   object_name    | row_count 
+------------------+-----------
+ course_inventory |         0
+ enrollments      |         0
+ payments         |         0
+(3 rows)
+       executing_file        
+-----------------------------</pre>

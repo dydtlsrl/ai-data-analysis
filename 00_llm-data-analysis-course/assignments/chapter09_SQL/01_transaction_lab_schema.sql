@@ -1,0 +1,196 @@
+-- Chapter 09. 01 transaction_lab 스키마 생성
+-- 시작 상태: transaction_lab 스키마가 존재하지 않음, course_project는 Chapter 07/08 완료 상태 그대로
+-- 완료 상태: transaction_lab 스키마 + course_inventory/enrollments/payments 세 테이블, 활성 신청 인덱스 생성, 세 테이블 0행
+-- Chapter 07 course_project 데이터는 절대 변경/삭제하지 않고, 읽기 전용 FK 참조만 사용합니다.
+-- 스키마·테이블 생성 전체를 하나의 트랜잭션으로 실행합니다.
+
+SELECT current_database();
+SELECT current_user;
+SELECT current_schema();
+SHOW search_path;
+
+BEGIN;
+
+-- 사전 조건 검사: Chapter 07/08이 기대한 상태 그대로인지, 권한이 있는지,
+-- transaction_lab이 아직 없는지를 DDL 실행 전에 먼저 확인합니다.
+-- 여기서 하나라도 실패하면 RAISE EXCEPTION으로 트랜잭션이 즉시 중단되어
+-- CREATE SCHEMA/CREATE TABLE이 아예 실행되지 않습니다.
+DO $$
+DECLARE
+    v_student_count      bigint;
+    v_instructor_count   bigint;
+    v_course_count       bigint;
+    v_enrollment_count   bigint;
+    v_status_apply       bigint; -- 신청
+    v_status_progress    bigint; -- 수강중
+    v_status_done        bigint; -- 완료
+    v_status_cancel      bigint; -- 취소
+    v_total_amount       numeric;
+    v_price_301           numeric;
+    v_price_302           numeric;
+    v_price_303           numeric;
+BEGIN
+    IF current_database() <> 'ai_database_book' THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 중단: 현재 데이터베이스는 %입니다. ai_database_book에 연결하세요.',
+            current_database();
+    END IF;
+
+    IF current_setting('transaction_read_only')::boolean THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 중단: 현재 연결이 읽기 전용입니다.';
+    END IF;
+
+    IF NOT has_database_privilege(current_user, current_database(), 'CREATE') THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 중단: 사용자 %에게 데이터베이스 %의 CREATE 권한이 없습니다.',
+            current_user,
+            current_database();
+    END IF;
+
+    IF to_regclass('course_project.students') IS NULL
+       OR to_regclass('course_project.instructors') IS NULL
+       OR to_regclass('course_project.courses') IS NULL
+       OR to_regclass('course_project.enrollments') IS NULL
+       OR to_regclass('course_project.uq_course_enrollments_active') IS NULL THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 중단: course_project 핵심 객체가 없습니다. Chapter 07을 먼저 완료하세요.';
+    END IF;
+
+    IF to_regnamespace('transaction_lab') IS NOT NULL THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 중단: transaction_lab 스키마가 이미 존재합니다. reset_transaction_lab.sql로 정리한 뒤 다시 실행하세요.';
+    END IF;
+
+    SELECT COUNT(*) INTO v_student_count FROM course_project.students;
+    SELECT COUNT(*) INTO v_instructor_count FROM course_project.instructors;
+    SELECT COUNT(*) INTO v_course_count FROM course_project.courses;
+    SELECT COUNT(*) INTO v_enrollment_count FROM course_project.enrollments;
+
+    IF NOT EXISTS (SELECT 1 FROM course_project.students WHERE id IN (101, 102, 103))
+       OR (SELECT COUNT(*) FROM course_project.students WHERE id IN (101, 102, 103)) <> 3 THEN
+        RAISE EXCEPTION 'transaction_lab 생성 중단: 학생 101~103이 Chapter 07 기준과 다릅니다.';
+    END IF;
+
+    SELECT price INTO v_price_301 FROM course_project.courses WHERE id = 301;
+    SELECT price INTO v_price_302 FROM course_project.courses WHERE id = 302;
+    SELECT price INTO v_price_303 FROM course_project.courses WHERE id = 303;
+
+    SELECT
+        COUNT(*) FILTER (WHERE status = '신청'),
+        COUNT(*) FILTER (WHERE status = '수강중'),
+        COUNT(*) FILTER (WHERE status = '완료'),
+        COUNT(*) FILTER (WHERE status = '취소'),
+        COALESCE(SUM(recorded_amount), 0)
+    INTO v_status_apply, v_status_progress, v_status_done, v_status_cancel, v_total_amount
+    FROM course_project.enrollments;
+
+    IF v_student_count <> 3
+       OR v_instructor_count <> 2
+       OR v_course_count <> 3
+       OR v_enrollment_count <> 5
+       OR v_price_301 <> 100000
+       OR v_price_302 <> 120000
+       OR v_price_303 <> 150000
+       OR v_status_apply <> 2
+       OR v_status_progress <> 1
+       OR v_status_done <> 1
+       OR v_status_cancel <> 1
+       OR v_total_amount <> 590000 THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 중단: Chapter 08 기준 상태와 다릅니다. rows=%/%/%/%, price=%/%/%, status=%/%/%/%, total=%',
+            v_student_count, v_instructor_count, v_course_count, v_enrollment_count,
+            v_price_301, v_price_302, v_price_303,
+            v_status_apply, v_status_progress, v_status_done, v_status_cancel,
+            v_total_amount;
+    END IF;
+
+    RAISE NOTICE 'Chapter 09 prerequisite check passed';
+END
+$$;
+
+-- transaction_lab 전용 스키마: 좌석·신청·결제 실습 상태만 저장합니다.
+CREATE SCHEMA transaction_lab;
+
+-- 좌석 재고 테이블. course_project.courses를 FK로 참조하되
+-- capacity/remaining_seats는 이 실습에서만 쓰는 별도 값입니다.
+CREATE TABLE transaction_lab.course_inventory (
+    course_id INTEGER PRIMARY KEY
+        REFERENCES course_project.courses(id),
+    capacity INTEGER NOT NULL
+        CHECK (capacity > 0),
+    remaining_seats INTEGER NOT NULL
+        CHECK (remaining_seats >= 0 AND remaining_seats <= capacity)
+);
+
+-- 실습용 수강신청 테이블. 상태는 이 장의 범위인 '수강중'/'취소'만 사용합니다.
+CREATE TABLE transaction_lab.enrollments (
+    id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    student_id INTEGER NOT NULL
+        REFERENCES course_project.students(id),
+    course_id INTEGER NOT NULL
+        REFERENCES course_project.courses(id),
+    enrolled_at TIMESTAMP NOT NULL,
+    status VARCHAR(20) NOT NULL
+        CHECK (status IN ('수강중', '취소')),
+    recorded_amount NUMERIC(12, 0) NOT NULL
+        CHECK (recorded_amount >= 0)
+);
+
+-- 같은 학생·강의의 중복 활성('수강중') 신청을 막는 부분 고유 인덱스.
+-- WHERE 조건이 있어 '취소' 행끼리는 중복이 있어도 막지 않습니다.
+CREATE UNIQUE INDEX uq_transaction_enrollments_active
+    ON transaction_lab.enrollments (student_id, course_id)
+    WHERE status = '수강중';
+
+-- 결제 테이블. enrollment_id에 UNIQUE를 걸어 신청 1건당 결제 최대 1건만 허용합니다.
+CREATE TABLE transaction_lab.payments (
+    id INTEGER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    enrollment_id INTEGER NOT NULL UNIQUE
+        REFERENCES transaction_lab.enrollments(id),
+    amount NUMERIC(12, 0) NOT NULL
+        CHECK (amount >= 0),
+    paid_at TIMESTAMP NOT NULL
+);
+
+-- 생성 결과 검증: 스키마·세 테이블·인덱스가 만들어졌고 모두 0행인지 확인합니다.
+-- 여기서 실패하면 COMMIT 전에 예외가 발생해 스키마 생성 자체가 취소됩니다.
+DO $$
+DECLARE
+    v_inventory_count bigint;
+    v_enrollment_count bigint;
+    v_payment_count bigint;
+BEGIN
+    IF to_regclass('transaction_lab.course_inventory') IS NULL
+       OR to_regclass('transaction_lab.enrollments') IS NULL
+       OR to_regclass('transaction_lab.payments') IS NULL
+       OR to_regclass('transaction_lab.uq_transaction_enrollments_active') IS NULL THEN
+        RAISE EXCEPTION 'transaction_lab 생성 검증 실패: 테이블 또는 인덱스가 만들어지지 않았습니다.';
+    END IF;
+
+    SELECT COUNT(*) INTO v_inventory_count FROM transaction_lab.course_inventory;
+    SELECT COUNT(*) INTO v_enrollment_count FROM transaction_lab.enrollments;
+    SELECT COUNT(*) INTO v_payment_count FROM transaction_lab.payments;
+
+    IF v_inventory_count <> 0 OR v_enrollment_count <> 0 OR v_payment_count <> 0 THEN
+        RAISE EXCEPTION
+            'transaction_lab 생성 검증 실패: 테이블이 비어 있지 않습니다. inventory=%, enrollments=%, payments=%',
+            v_inventory_count, v_enrollment_count, v_payment_count;
+    END IF;
+
+    RAISE NOTICE 'Chapter 09 transaction_lab schema created';
+END
+$$;
+
+COMMIT;
+
+-- 생성 직후 상태 확인용 조회 (세 테이블 모두 0행이어야 합니다).
+SELECT 'course_inventory' AS object_name, COUNT(*) AS row_count
+FROM transaction_lab.course_inventory
+UNION ALL
+SELECT 'enrollments', COUNT(*)
+FROM transaction_lab.enrollments
+UNION ALL
+SELECT 'payments', COUNT(*)
+FROM transaction_lab.payments
+ORDER BY object_name;

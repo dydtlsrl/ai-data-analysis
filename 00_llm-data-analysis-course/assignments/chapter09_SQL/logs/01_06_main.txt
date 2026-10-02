@@ -1,0 +1,277 @@
+        executing_file         
+-------------------------------
+ 01_transaction_lab_schema.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_user 
+--------------
+ postgres
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+BEGIN
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/01_transaction_lab_schema.sql:110: 알림:  Chapter 09 prerequisite check passed
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+CREATE INDEX
+CREATE TABLE
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/01_transaction_lab_schema.sql:183: 알림:  Chapter 09 transaction_lab schema created
+COMMIT
+   object_name    | row_count 
+------------------+-----------
+ course_inventory |         0
+ enrollments      |         0
+ payments         |         0
+(3 rows)
+
+       executing_file        
+-----------------------------
+ 02_transaction_lab_seed.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+BEGIN
+DO
+INSERT 0 3
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/02_transaction_lab_seed.sql:65: 알림:  Chapter 09 transaction_lab seed passed
+COMMIT
+ course_id |       title        | price  | capacity | remaining_seats 
+-----------+--------------------+--------+----------+-----------------
+       301 | 데이터베이스 입문  | 100000 |        2 |               2
+       302 | 정규화 실습        | 120000 |        1 |               1
+       303 | 파이썬 데이터 분석 | 150000 |        1 |               1
+(3 rows)
+
+      executing_file       
+---------------------------
+ 03_commit_transaction.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+BEGIN
+ course_id |       title       | price  | remaining_seats 
+-----------+-------------------+--------+-----------------
+       301 | 데이터베이스 입문 | 100000 |               2
+(1 row)
+
+  id  | enrollment_id | amount 
+------+---------------+--------
+ 9901 |          9001 | 100000
+(1 row)
+
+INSERT 0 1
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/03_commit_transaction.sql:94: 알림:  Chapter 09 commit transaction (course 301) passed
+COMMIT
+ course_id | remaining_seats 
+-----------+-----------------
+       301 |               1
+       302 |               1
+       303 |               1
+(3 rows)
+
+  id  | student_id | course_id |        enrolled_at         | status | recorded_amount 
+------+------------+-----------+----------------------------+--------+-----------------
+ 9001 |        101 |       301 | 2026-10-01 10:14:13.973827 | 수강중 |          100000
+(1 row)
+
+  id  | enrollment_id | amount |          paid_at           
+------+---------------+--------+----------------------------
+ 9901 |          9001 | 100000 | 2026-10-01 10:14:13.973827
+(1 row)
+
+       executing_file        
+-----------------------------
+ 04_rollback_transaction.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+BEGIN
+  id  | enrollment_id | amount 
+------+---------------+--------
+ 9902 |          9002 | 120000
+(1 row)
+
+INSERT 0 1
+ course_id | remaining_seats 
+-----------+-----------------
+       302 |               0
+(1 row)
+
+  id  | student_id | course_id |        enrolled_at        | status | recorded_amount 
+------+------------+-----------+---------------------------+--------+-----------------
+ 9002 |        102 |       302 | 2026-10-01 10:14:13.97828 | 수강중 |          120000
+(1 row)
+
+  id  | enrollment_id | amount |          paid_at          
+------+---------------+--------+---------------------------
+ 9902 |          9002 | 120000 | 2026-10-01 10:14:13.97828
+(1 row)
+
+ROLLBACK
+ course_id | remaining_seats 
+-----------+-----------------
+       302 |               1
+(1 row)
+
+ id | student_id | course_id | enrolled_at | status | recorded_amount 
+----+------------+-----------+-------------+--------+-----------------
+(0 rows)
+
+ id | enrollment_id | amount | paid_at 
+----+---------------+--------+---------
+(0 rows)
+
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/04_rollback_transaction.sql:81: 알림:  Chapter 09 rollback transaction (course 302) passed
+       executing_file       
+----------------------------
+ 05_commit_and_sold_out.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+BEGIN
+  id  | enrollment_id | amount 
+------+---------------+--------
+ 9902 |          9002 | 120000
+(1 row)
+
+INSERT 0 1
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/05_commit_and_sold_out.sql:66: 알림:  Chapter 09 commit transaction (course 302, student 103) passed
+COMMIT
+ course_id | remaining_seats 
+-----------+-----------------
+(0 rows)
+
+UPDATE 0
+ALTER TABLE
+ALTER TABLE
+ course_id | remaining_seats 
+-----------+-----------------
+       301 |               1
+       302 |               0
+       303 |               1
+(3 rows)
+
+  id  | student_id | course_id |        enrolled_at         | status | recorded_amount 
+------+------------+-----------+----------------------------+--------+-----------------
+ 9001 |        101 |       301 | 2026-10-01 10:14:13.973827 | 수강중 |          100000
+ 9002 |        103 |       302 | 2026-10-01 10:14:13.979719 | 수강중 |          120000
+(2 rows)
+
+  id  | enrollment_id | amount |          paid_at           
+------+---------------+--------+----------------------------
+ 9901 |          9001 | 100000 | 2026-10-01 10:14:13.973827
+ 9902 |          9002 | 120000 | 2026-10-01 10:14:13.979719
+(2 rows)
+
+        executing_file         
+-------------------------------
+ 06_transaction_validation.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/06_transaction_validation.sql:108: 알림:  Chapter 09 main transaction validation passed
+DO
+ course_id |       title        | capacity | remaining_seats 
+-----------+--------------------+----------+-----------------
+       301 | 데이터베이스 입문  |        2 |               1
+       302 | 정규화 실습        |        1 |               0
+       303 | 파이썬 데이터 분석 |        1 |               1
+(3 rows)
+
+ enrollment_id | student_id | course_id | status | recorded_amount | payment_id | payment_amount 
+---------------+------------+-----------+--------+-----------------+------------+----------------
+          9001 |        101 |       301 | 수강중 |          100000 |       9901 |         100000
+          9002 |        103 |       302 | 수강중 |          120000 |       9902 |         120000
+(2 rows)
+

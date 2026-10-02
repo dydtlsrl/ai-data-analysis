@@ -1,0 +1,55 @@
+PostgreSQL psql actual execution log (2026-10-01)
+Not a DBeaver screenshot; full original: logs/01_06_main.txt
+
+03_commit_transaction.sql
+(1 row)
+
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+BEGIN
+ course_id |       title       | price  | remaining_seats 
+-----------+-------------------+--------+-----------------
+       301 | 데이터베이스 입문 | 100000 |               2
+(1 row)
+
+  id  | enrollment_id | amount 
+------+---------------+--------
+ 9901 |          9001 | 100000
+(1 row)
+
+INSERT 0 1
+DO
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/03_commit_transaction.sql:94: 알림:  Chapter 09 commit transaction (course 301) passed
+COMMIT
+ course_id | remaining_seats 
+-----------+-----------------
+       301 |               1
+       302 |               1
+       303 |               1
+(3 rows)
+
+  id  | student_id | course_id |        enrolled_at         | status | recorded_amount 
+------+------------+-----------+----------------------------+--------+-----------------
+ 9001 |        101 |       301 | 2026-10-01 10:14:13.973827 | 수강중 |          100000
+(1 row)
+
+  id  | enrollment_id | amount |          paid_at           
+------+---------------+--------+----------------------------
+ 9901 |          9001 | 100000 | 2026-10-01 10:14:13.973827
+(1 row)
+
+       executing_file        
+-----------------------------

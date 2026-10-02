@@ -1,0 +1,32 @@
+Session A (separate connection)
+BEGIN
+ course_id 
+-----------
+       303
+(1 row)
+
+LOCK_HELD
+ pg_sleep 
+----------
+ 
+(1 row)
+
+ROLLBACK
+
+Session B (separate connection)
+ transaction_isolation 
+-----------------------
+ read committed
+(1 row)
+
+BEGIN
+SET
+ course_id | remaining_seats 
+-----------+-----------------
+       303 |               1
+(1 row)
+
+ROLLBACK
+
+Session B elapsed: 3.008 seconds
+lock_timeout: not triggered

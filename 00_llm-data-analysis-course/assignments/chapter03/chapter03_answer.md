@@ -22,6 +22,7 @@ LMS에서 제출자를 확인할 수 있으므로 공개 저장소의 답안 파
 
 ```text
 GitHub 계정 또는 별칭: dydtlsrl
+이메일: dydtlsrl@gmail.com
 과제 작성일: 2026.09.07
 사용한 AI 도구: chat GPT
 ```

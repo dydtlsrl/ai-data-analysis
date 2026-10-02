@@ -11,7 +11,8 @@
 이 파일과 캡처 화면에는 실제 비밀번호, 전체 DB 접속 URL, API Key, 개인정보를 기록하지 않습니다.
 
 ```text
-GitHub 계정 또는 별칭: dydtlsrl@gmail.com
+GitHub 계정 또는 별칭: dydtlsrl
+이메일: dydtlsrl@gmail.com
 과제 작성일: 2026.09.08
 사용한 AI 도구: chat GPT
 ```

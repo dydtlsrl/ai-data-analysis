@@ -1,0 +1,30 @@
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/06_transaction_validation.sql:108: 알림:  Chapter 09 main transaction validation passed
+DO
+ course_id |       title        | capacity | remaining_seats 
+-----------+--------------------+----------+-----------------
+       301 | 데이터베이스 입문  |        2 |               1
+       302 | 정규화 실습        |        1 |               0
+       303 | 파이썬 데이터 분석 |        1 |               1
+(3 rows)
+
+ enrollment_id | student_id | course_id | status | recorded_amount | payment_id | payment_amount 
+---------------+------------+-----------+--------+-----------------+------------+----------------
+          9001 |        101 |       301 | 수강중 |          100000 |       9901 |         100000
+          9002 |        103 |       302 | 수강중 |          120000 |       9902 |         120000
+(2 rows)
+

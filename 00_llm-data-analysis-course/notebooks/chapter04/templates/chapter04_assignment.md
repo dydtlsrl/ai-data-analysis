@@ -3,10 +3,11 @@
 > 주 제출물은 실행 완료 Notebook `chapter04/chapter04.ipynb`입니다. 이 양식의 항목을 Notebook의 Markdown 셀로 추가해 작성합니다.
 
 ## 0. 제출 정보
-- 이름:
-- GitHub ID:
+- 이름: 양성용
+- GitHub ID: dydtlsrl
+- 이메일: dydtlsrl@gmail.com
 - 작성일:
-- 최종 제출 URL:
+- 최종 제출 URL: https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/notebooks/chapter04/chapter04.ipynb
 
 ## 1. 질문과 필요한 데이터 선택
 ### 내가 확인하려는 질문

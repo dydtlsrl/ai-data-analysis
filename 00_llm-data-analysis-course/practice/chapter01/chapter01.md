@@ -8,7 +8,8 @@
 ## 0. 제출 정보
 
 - 이름: 양성용
-- GitHub ID: dydtlsrl@gmail.com
+- GitHub ID: dydtlsrl
+- 이메일: dydtlsrl@gmail.com
 - 개인 저장소명: `ai-data-analysis`
 - 작성일: 2026-09-02
 - 사용한 LLM:chat GPT

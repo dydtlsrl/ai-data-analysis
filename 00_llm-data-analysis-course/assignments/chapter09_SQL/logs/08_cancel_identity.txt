@@ -1,0 +1,66 @@
+ current_database 
+------------------
+ ai_database_book
+(1 row)
+
+ current_schema 
+----------------
+ public
+(1 row)
+
+   search_path   
+-----------------
+ "$user", public
+(1 row)
+
+  id  | student_id | course_id |        enrolled_at         | status | recorded_amount 
+------+------------+-----------+----------------------------+--------+-----------------
+ 9001 |        101 |       301 | 2026-10-01 10:14:13.973827 | 수강중 |          100000
+(1 row)
+
+ course_id | remaining_seats 
+-----------+-----------------
+       301 |               1
+(1 row)
+
+BEGIN
+UPDATE 1
+  id  | student_id | course_id |        enrolled_at         | status | recorded_amount 
+------+------------+-----------+----------------------------+--------+-----------------
+ 9001 |        101 |       301 | 2026-10-01 10:14:13.973827 | 취소   |          100000
+(1 row)
+
+ course_id | remaining_seats 
+-----------+-----------------
+       301 |               2
+(1 row)
+
+DO
+ROLLBACK
+psql:C:/dev/ai-data-analysis/00_llm-data-analysis-course/assignments/chapter09_SQL/08_cancel_and_restore.sql:53: 알림:  Chapter 09 cancel and restore (temporary) passed
+  id  | student_id | course_id |        enrolled_at         | status | recorded_amount 
+------+------------+-----------+----------------------------+--------+-----------------
+ 9001 |        101 |       301 | 2026-10-01 10:14:13.973827 | 수강중 |          100000
+(1 row)
+
+ course_id | remaining_seats 
+-----------+-----------------
+       301 |               1
+(1 row)
+
+    sequencename    | last_value 
+--------------------+------------
+ enrollments_id_seq |           
+ payments_id_seq    |           
+(2 rows)
+
+ last_value | is_called 
+------------+-----------
+       9003 | f
+(1 row)
+
+ last_value | is_called 
+------------+-----------
+       9903 | f
+(1 row)
+

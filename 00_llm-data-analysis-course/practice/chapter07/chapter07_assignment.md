@@ -3,8 +3,9 @@
 > 이 내용을 `chapter07.ipynb`의 Markdown 셀로 작성합니다.
 
 ## 제출 정보
-- 이름: 미입력 (제출 전 본인 이름 입력)
+- 이름: 양성용
 - GitHub ID: dydtlsrl
+- 이메일: dydtlsrl@gmail.com
 - 작성일: 2026-10-01
 - 최종 Notebook URL: https://github.com/dydtlsrl/ai-data-analysis/blob/main/00_llm-data-analysis-course/practice/chapter07/chapter07.ipynb
 
@@ -166,4 +167,4 @@
 - [x] 그래프와 수치를 교차 검증했습니다.
 - [x] 관찰과 해석을 구분했습니다.
 - [x] 업무적 의미와 한계를 작성했습니다.
-- [ ] 최종 Notebook URL을 제출합니다.
+- [x] 최종 Notebook URL을 제출합니다.

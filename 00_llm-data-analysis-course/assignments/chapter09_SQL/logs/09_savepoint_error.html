@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><title>09_savepoint_error</title><style>body{margin:20px;background:#fff;color:#152238}h1{font:20px sans-serif}p{font:13px sans-serif}pre{font:12px/1.4 Consolas,"Malgun Gothic",monospace;white-space:pre-wrap}</style><h1>09_savepoint_error</h1><p>실제 PostgreSQL psql 출력 로그 표시 화면 · 2026-10-01 · DBeaver 캡처 아님</p><pre> transaction_isolation 
+-----------------------
+ read committed
+(1 row)
+BEGIN
+SAVEPOINT
+UPDATE 1
+오류:  23505: 중복된 키 값이 &quot;uq_transaction_enrollments_active&quot; 고유 제약 조건을 위반함
+DETAIL:  (student_id, course_id)=(103, 302) 키가 이미 있습니다.
+SCHEMA NAME:  transaction_lab
+TABLE NAME:  enrollments
+CONSTRAINT NAME:  uq_transaction_enrollments_active
+LOCATION:  _bt_check_unique, nbtinsert.c:673
+오류:  25P02: 현재 트랜잭션은 중지되어 있습니다. 이 트랜잭션을 종료하기 전까지는 모든 명령이 무시될 것입니다
+LOCATION:  exec_simple_query, postgres.c:1140
+ROLLBACK
+         note          
+-----------------------
+ savepoint recovery ok
+(1 row)
+ course_id | remaining_seats 
+-----------+-----------------
+       303 |               1
+(1 row)
+COMMIT
+ last_value | is_called 
+------------+-----------
+       9003 | t
+(1 row)
+ last_value | is_called 
+------------+-----------
+       9903 | f
+(1 row)</pre>
