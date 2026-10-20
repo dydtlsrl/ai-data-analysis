@@ -1,0 +1,52 @@
+h1 {
+    color: rgb(164, 164, 251);
+}
+
+
+/* 💡 1. 맨 위에 추가: 전체 페이지 배경과 글자색 설정 */
+body {
+    color: #334155;            /* 짙은 회색 글자 */
+    background-color: #f8fafc; /* 아주 밝은 회색 배경 */
+    margin: 0;                 /* 페이지 전체 테두리 공백 없애기 (선택) */
+    font-family: Arial, sans-serif;
+
+}
+
+h1 {
+    font-size: 38px;    /* 글자 크기 */
+    font-weight: 700;   /* 글자 굵기 (700은 bold와 같습니다) */
+}
+
+p {
+    line-height: 1.6;   /* 줄 간격 (기본보다 한결 시원해집니다) */
+}
+
+/* 💡 2. 헤더 스타일 추가: 상단 바 디자인 */
+header {
+    background-color: #000000; /* 짙은 네이비 배경 */
+    color: white;              /* 흰색 글자 */
+    padding: 15px 20px;        /* 안쪽 여백 */
+}
+
+
+.member-card {
+    background-color: lightgray;
+    padding: 20px; /* 상자 안쪽 여백을 살짝 줍니다 */
+}
+
+#signup-form {
+    background-color: #f8fafc; /* 교재의 밝은 회색 */
+    border: 2px solid coral;   /* 눈에 잘 띄도록 코랄색 테두리 추가 */
+    padding: 20px;             /* 상자 안쪽 여백 */
+    margin-top: 20px;          /* 위 상자와의 간격 */
+}
+
+p {
+    color: rgb(22, 22, 59);
+}
+.notice {
+    color: green;
+}
+#important {
+    color: rgb(172, 94, 22);
+}

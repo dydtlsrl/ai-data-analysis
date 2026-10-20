@@ -1,0 +1,26 @@
+{
+  "stay": {
+    "params": {
+      "numOfRows": 100,
+      "pageNo": 1,
+      "baseYm": "202508",
+      "areaCd": "11",
+      "tarSjrnDsIxCd": "21",
+      "MobileOS": "ETC",
+      "MobileApp": "chapter14-1",
+      "_type": "json"
+    }
+  },
+  "consumption": {
+    "params": {
+      "numOfRows": 100,
+      "pageNo": 1,
+      "baseYm": "202508",
+      "areaCd": "11",
+      "tarExpDsIxCd": "22",
+      "MobileOS": "ETC",
+      "MobileApp": "chapter14-1",
+      "_type": "json"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+/* 전체 박스 고정 규칙 */
+* {
+    box-sizing: border-box;
+}
+
+/* 블록 상자 스타일 */
+.box-block {
+    background-color: lightblue;
+    margin-bottom: 10px;
+    width: 150px; /* 가로를 줄여도 다음 줄로 밀어냅니다! */
+}
+
+/* 인라인 상자 스타일 */
+.box-inline {
+    background-color: lightcoral;
+    /* 🌟 인라인은 width(가로)나 height(세로)를 적어도 무시당합니다! */
+    width: 150px; 
+    padding: 10px;
+}
