@@ -1,8 +1,8 @@
 ﻿source,period,item,metric,value,change_from_previous
-NAVER,2026-10-01,맛집,search_interest_ratio,46.1051,-29.1802
-NAVER,2026-10-01,축제,search_interest_ratio,33.8294,3.1906
-NAVER,2026-10-01,캠핑,search_interest_ratio,3.1942,-0.8357
-NAVER,2026-10-01,여행,search_interest_ratio,2.6514,-1.6285
+NAVER,2026-10-01,맛집,search_interest_ratio,58.7113,-16.574
+NAVER,2026-10-01,축제,search_interest_ratio,40.3687,9.7299
+NAVER,2026-10-01,캠핑,search_interest_ratio,5.1016,1.0717
+NAVER,2026-10-01,여행,search_interest_ratio,4.757,0.4771
 TOURISM,202508,강남구,stay_intensity,101.73,
 TOURISM,202508,송파구,stay_intensity,96.62,
 TOURISM,202508,마포구,stay_intensity,89.24,
