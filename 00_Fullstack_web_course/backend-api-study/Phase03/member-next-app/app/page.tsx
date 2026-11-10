@@ -1,127 +1,92 @@
 // ==================================================================
-// # 이 파일: app/page.tsx
-// # 전체 흐름: 접속(/) → HomePage 함수 실행 → 화면(HTML) 반환 → 브라우저에 표시
+// # 파일: app/page.tsx  (02강 버전)
+// # 역할: 가게 주인. 재료(샘플 회원 3명)를 준비해서 점원(MemberList)에게 건네준다.
+// # 전체 흐름: 접속(/) → HomePage 실행 → 재료 준비 → MemberList에 전달 → 카드 3장 화면 표시
 // ==================================================================
 
-// # [명령어] export default function HomePage() { ... }
-// # 구조: "function"은 이름(HomePage)을 붙인 묶음(함수)을 만든다.
-// #       "export default"는 이 함수를 이 파일의 대표로 밖에 내보낸다.
-// # 목적: Next.js는 app/page.tsx의 대표 함수를 찾아 "/" 주소의 화면으로 사용한다.
-// # 예상결과: 브라우저에서 http://localhost:3000 을 열면 이 함수가 실행된다.
-export default function HomePage() {
-  // # [명령어] const plannedFeatures = [ ... ]
-  // # 구조: "const"는 값을 담는 이름표(변수)를 만든다. 한 번 담으면 다른 값으로 바꾸지 않는다.
-  // #       "[ ... ]"는 값을 순서대로 담는 배열(목록)이고, 안의 글자는 쉼표로 구분한다.
-  // # 목적: 화면에 보여줄 기능 이름 4개를 한곳에 모아두고, 아래에서 반복해서 쓴다.
-  // # 예상결과: plannedFeatures 안에 문자열 4개가 담긴다. (아직 화면에는 안 보임)
-  const plannedFeatures = [
-    "회원 목록 보기",
-    "회원 검색하기",
-    "회원 등록하기",
-    "회원 수정·삭제하기",
-  ];
+// # [명령어] import MemberList from "../components/MemberList";
+// # 구조: "../"는 한 칸 위(프로젝트 루트)로 올라가서 components 폴더의 MemberList를 가져온다.
+// # 목적: STEP 04에서 만든 점원을 이 파일에서 부르려고 가져온다.
+import MemberList from "../components/MemberList";
 
-  // # [명령어] return ( ... )
-  // # 구조: 함수가 끝나면서 괄호 안의 화면 설계도(JSX)를 돌려준다.
-  // # 목적: Next.js가 이 설계도를 받아 브라우저가 이해하는 HTML로 바꿔 보여준다.
-  // # 예상결과: 아래 <main> 전체가 화면으로 그려진다.
+// # [명령어] import type { Member } from "../types/member";
+// # 목적: 주문서 양식(Member)을 가져와서, 아래 샘플 데이터가 양식에 맞는지 검사하게 한다.
+import type { Member } from "../types/member";
+
+// # [명령어] const sampleMembers: Member[] = [ ... ];
+// # 구조: "const sampleMembers"는 이름표를 붙인 상자를 만든다.
+// #       ": Member[]"는 "이 상자에는 Member 양식을 따르는 회원이 여러 명 들어간다"는 약속이다.
+// #       [ ... ] 안에 회원을 { } 로 하나씩 적고, 쉼표로 구분한다.
+// # 목적: 서버(FastAPI)가 없으니 화면 연습용 가짜 회원 3명을 직접 적어 둔다. (4강에서 진짜 데이터로 바꾼다)
+// # 예상결과: 아직 화면에는 안 보인다. 아래에서 점원에게 건네줘야 보인다.
+const sampleMembers: Member[] = [
+  // # 회원 한 명 = { 칸이름: 값, ... }. Member 양식의 칸 4개를 모두 채워야 한다.
+  {
+    member_id: 1,
+    name: "Kim",
+    email: "kim@example.com",
+    age: 30,
+  },
+  {
+    member_id: 2,
+    name: "Lee",
+    email: "lee@example.com",
+    age: 27,
+  },
+  {
+    member_id: 3,
+    name: "Park",
+    email: "park@example.com",
+    age: 35,
+  },
+];
+
+// # [명령어] export default function HomePage() { ... }
+// # 목적: Next.js가 "/" 주소의 화면으로 사용하는 대표 함수다. (1강과 같은 역할)
+export default function HomePage() {
   return (
     // # [태그] <main style={{ ... }}>
-    // # 구조: <main>은 페이지의 핵심 내용을 담는 큰 상자다.
-    // #       style={{ ... }}에서 바깥 { }는 "자바스크립트 값을 쓴다"는 표시이고,
-    // #       안쪽 { }는 CSS 속성을 이름: 값 형태로 담은 객체다.
-    // #       maxWidth는 최대 너비, margin "64px auto"는 위아래 64px 여백과 좌우 가운데 정렬,
-    // #       padding은 안쪽 여백, fontFamily는 글꼴이다.
-    // # 목적: 내용이 너무 넓게 퍼지지 않게 가운데에 모은다.
-    // # 예상결과: 내용이 화면 가운데 880px 폭 안에 모여서 보인다.
+    // # 구조: 페이지 전체를 감싸는 큰 상자다. 가운데에 880px 폭으로 모으는 스타일이다.
+    // # 예상결과: 내용이 화면 가운데에 모여 보인다.
     <main
       style={{
         maxWidth: 880,
-        margin: "64px auto",
+        margin: "48px auto",
         padding: "0 24px",
         fontFamily: "Arial, sans-serif",
       }}
     >
-      {/* # [태그] <p> : 문단(글 한 덩어리)을 만든다. */}
-      {/* # 구조: color는 글자색(파랑), fontWeight 700은 굵은 글씨다. */}
-      {/* # 목적: 맨 위에 과정 이름을 작게 알려준다. */}
-      {/* # 예상결과: "Phase 03 · Full-stack 실습"이 파란 굵은 글씨로 보인다. */}
+      {/* # [태그] <p> : 맨 위 파란 글씨 */}
+      {/* # 예상결과: "Phase 03 · 02강 React Component와 TypeScript"가 파란 굵은 글씨로 보인다. */}
       <p style={{ color: "#2563eb", fontWeight: 700 }}>
-        Phase 03 · Full-stack 실습
+        Phase 03 · 02강 React Component와 TypeScript
       </p>
 
-      {/* # [태그] <h1> : 페이지의 가장 큰 제목을 만든다. */}
-      {/* # 구조: fontSize는 글자 크기(36px), marginBottom은 아래쪽 간격(12px)이다. */}
-      {/* # 목적: 이 화면이 무엇인지 한눈에 알려준다. */}
-      {/* # 예상결과: "회원관리 시스템"이 큰 글씨로 보인다. */}
-      <h1 style={{ fontSize: 36, marginBottom: 12 }}>
+      {/* # [태그] <h1> : 큰 제목 */}
+      {/* # 예상결과: "회원관리 시스템" (다크 모드에서는 색이 어두워 잘 안 보일 수 있음) */}
+      <h1 style={{ fontSize: 36, color: "#0f172a" }}>
         회원관리 시스템
       </h1>
 
-      {/* # [태그] <p> : 제목 아래 설명 문장이다. */}
-      {/* # 구조: color는 회색빛 글자색, lineHeight 1.7은 줄 사이 간격(글자 크기의 1.7배)이다. */}
-      {/* # 목적: 이 서비스를 어떤 기술로 만들고 어디에 연결할지 설명한다. */}
-      {/* # 예상결과: 두 줄 설명 문장이 읽기 편한 간격으로 보인다. */}
+      {/* # [태그] <p> : 설명 문장 */}
+      {/* # 예상결과: 회원 목록을 작은 Component로 나눈다는 설명이 두 줄로 보인다. */}
       <p style={{ color: "#475569", lineHeight: 1.7 }}>
-        React + Next.js + TypeScript로 화면을 만들고,
-        이후 FastAPI와 PostgreSQL에 연결합니다.
+        회원 목록을 작은 Component로 나누어 보여줍니다.
+        현재는 샘플 데이터이며, 실제 API 연결은 4강입니다.
       </p>
 
-      {/* # [태그] <section> : 내용을 주제별로 묶는 구역 상자다. */}
-      {/* # 구조: marginTop은 위쪽 간격, padding은 안쪽 여백, */}
-      {/* #       border는 "두께 종류 색" 순서의 테두리, borderRadius는 모서리 둥글기다. */}
-      {/* # 목적: "앞으로 만들 기능" 내용을 테두리 상자로 묶어 구분한다. */}
-      {/* # 예상결과: 둥근 모서리의 연한 회색 테두리 상자가 나타난다. */}
-      <section
-        style={{
-          marginTop: 32,
-          padding: 24,
-          border: "1px solid #cbd5e1",
-          borderRadius: 12,
-        }}
-      >
-        {/* # [태그] <h2> : 중간 크기 소제목이다. */}
-        {/* # 목적: 상자 안 내용이 무엇인지 알려준다. */}
-        {/* # 예상결과: "앞으로 만들 기능"이 h1보다 작은 제목으로 보인다. */}
-        <h2 style={{ fontSize: 22, marginBottom: 16 }}>
-          앞으로 만들 기능
-        </h2>
+      {/* # [핵심] <MemberList members={sampleMembers} /> */}
+      {/* # 구조: 우리가 만든 MemberList를 HTML 태그처럼 부른다. */}
+      {/* #       "members={sampleMembers}"는 "members라는 이름으로 준비한 재료 상자(sampleMembers)를 건네준다"는 뜻이다. (Props 전달) */}
+      {/* #       { } 안은 글자가 아니라 변수(상자)라서 따옴표 대신 중괄호를 쓴다. */}
+      {/* # 목적: 이 한 줄이 점원을 부르는 순간이다. 여기서부터 MemberList → MemberCard로 이어진다. */}
+      {/* # 예상결과: "회원 목록 (3명)"과 Kim, Lee, Park 카드 3장이 나타난다. */}
+      <MemberList members={sampleMembers} />
 
-        {/* # [태그] <ul> : 점(•)이 붙는 목록 상자다. 안의 <li> 하나가 항목 하나다. */}
-        {/* # 구조: paddingLeft는 왼쪽 들여쓰기, lineHeight 2는 줄 간격을 넓게 한다. */}
-        {/* # 목적: 기능 4개를 목록 형태로 보여준다. */}
-        {/* # 예상결과: 항목 4개가 점과 함께 세로로 나열된다. */}
-        <ul style={{ paddingLeft: 24, lineHeight: 2 }}>
-          {/* # [메서드] plannedFeatures.map((feature) => ( ... )) */}
-          {/* # 구조: "배열.map(...)"은 배열의 항목을 처음부터 끝까지 하나씩 꺼내서 */}
-          {/* #       괄호 안의 방식대로 바꾼 뒤 새 목록으로 돌려준다. */}
-          {/* #       (feature) => ( ... ) 는 "꺼낸 항목을 feature라 부르고 ( ... )를 만든다"는 뜻의 */}
-          {/* #       화살표 함수다. */}
-          {/* # 목적: <li>를 4번 직접 쓰지 않고, 목록(배열)만 고치면 화면이 자동으로 바뀌게 한다. */}
-          {/* # 예상결과: "회원 목록 보기" → "회원 검색하기" → "회원 등록하기" → */}
-          {/* #           "회원 수정·삭제하기" 순서로 <li> 4개가 만들어진다. */}
-          {plannedFeatures.map((feature) => (
-            // # [속성] key={feature}
-            // # 구조: 반복해서 만든 항목마다 서로 다른 이름표(key)를 붙인다.
-            // # 목적: React가 어떤 항목이 바뀌었는지 구분하게 돕는다. (2강에서 자세히 설명)
-            // # 예상결과: 화면에는 보이지 않지만, 빠지면 콘솔에 key 경고가 나온다.
-            // # {feature}: 중괄호 안에 변수를 쓰면 그 값(글자)이 그 자리에 출력된다.
-            <li key={feature}>{feature}</li>
-          ))}
-        </ul>
-
-        {/* # [태그] <p> : 현재 어느 강의 단계인지 보여주는 문장이다. */}
-        {/* # 예상결과: "현재 단계: 01강 · 첫 화면 구성"이 연한 회색 글씨로 보인다. */}
-        <p style={{ color: "#64748b", marginTop: 16 }}>
-          현재 단계: 01강 · 첫 화면 구성
-        </p>
-      </section>
-
-      {/* # [태그] <p> : 맨 아래 다음 강의 안내 문장이다. */}
-      {/* # 목적: 다음에 무엇을 배울지 알려준다. */}
-      {/* # 예상결과: "다음 단계: 02강에서 회원 카드와 회원 목록을 구현합니다."가 보인다. */}
-      <p style={{ marginTop: 24, color: "#475569" }}>
-        다음 단계: 02강에서 회원 카드와 회원 목록을 구현합니다.
+      {/* # [태그] <p> : 맨 아래 다음 강의 안내 */}
+      {/* # 예상결과: "다음 단계: 03강 · 검색과 입력 Form" */}
+      <p style={{ color: "#64748b", marginTop: 32 }}>
+        다음 단계: 03강 · 검색과 입력 Form
       </p>
     </main>
   );
