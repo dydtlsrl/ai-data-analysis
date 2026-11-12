@@ -1,8 +1,8 @@
 // ============================================================
-// lib/members-api.ts  (5강 버전)
+// lib/members-api.ts  (6강 버전)
 // ------------------------------------------------------------
-// [목적]  백엔드(FastAPI)에 회원 조회·등록·수정·삭제 전화를 거는 담당 직원
-// [구조]  경로 2개 + 보조 함수 3개 + API 함수 4개
+// [목적]  백엔드(FastAPI)에 회원 조회·상세조회·등록·수정·삭제 전화를 거는 담당 직원
+// [구조]  경로 2개 + 보조 함수 3개 + API 함수 5개
 // [예상결과] 성공 → 결과 반환 / 실패 → "HTTP 상태코드"가 담긴 Error를 던진다
 // ============================================================
 
@@ -11,7 +11,7 @@ import type { Member } from "../types/member";
 
 // # 요청 경로 2종류 (백엔드 라우터를 확인한 결과)
 // #   컬렉션(목록·등록): "/members/"      → 끝 슬래시 있음
-// #   항목(수정·삭제):   "/members/{id}"  → 끝 슬래시 없음
+// #   항목(상세·수정·삭제): "/members/{id}" → 끝 슬래시 없음
 // #   이 모양이 아니면 307 이동이나 404가 난다
 const MEMBERS_COLLECTION_PATH = "/members/";
 const MEMBERS_ITEM_PATH = "/members";
@@ -63,7 +63,7 @@ function requireOk(response: Response): void {
   }
 }
 
-// # [함수] getMembers: 회원 목록 조회 (GET /members/)  ← 4강과 동일
+// # [함수] getMembers: 회원 목록 조회 (GET /members/)
 // #   입력: signal(선택) → 화면이 사라질 때 요청을 취소하는 신호
 // #   출력: Promise<Member[]>
 export async function getMembers(signal?: AbortSignal): Promise<Member[]> {
@@ -88,10 +88,37 @@ export async function getMembers(signal?: AbortSignal): Promise<Member[]> {
   return data;
 }
 
+// # [함수] getMember: 회원 1명 조회 (GET /members/{id})  → 성공 200, 없는 ID는 404
+// #   입력: memberId(조회할 회원 번호), signal(선택: 요청 취소 신호)
+// #   처리: 항목 경로로 GET → 성공 확인 → JSON 변환 → Member 모양 검사
+// #   출력: Promise<Member>  (목록과 달리 배열이 아니라 회원 객체 1개)
+export async function getMember(
+  memberId: number,
+  signal?: AbortSignal,
+): Promise<Member> {
+  // # 항목 경로: "/members/2" (끝 슬래시 없음)
+  const response = await fetch(apiUrl(`${MEMBERS_ITEM_PATH}/${memberId}`), {
+    cache: "no-store",
+    signal,
+  });
+
+  // # 404(없는 ID) 등 실패면 상태코드를 담아 오류를 던진다
+  requireOk(response);
+
+  const data: unknown = await response.json();
+
+  // # 회원 객체 1개 모양이 아니면 오류
+  if (!isMember(data)) {
+    throw new Error("회원 상세 응답이 예상한 Member 형식이 아닙니다.");
+  }
+
+  return data;
+}
+
 // # [함수] createMember: 회원 등록 (POST /members/)  → 성공 201
 // #   입력: body = { name, email, age }
 // #   처리: JSON 글자로 바꿔 전송 → 성공 확인 (응답 본문은 쓰지 않는다)
-// #   출력: Promise<void> (돌려줄 값 없음. 최신 목록은 화면이 GET으로 다시 받는다)
+// #   출력: Promise<void> (최신 목록은 화면이 GET으로 다시 받는다)
 export async function createMember(body: MemberPayload): Promise<void> {
   const response = await fetch(apiUrl(MEMBERS_COLLECTION_PATH), {
     method: "POST", // # 새로 만들어 달라는 방식
